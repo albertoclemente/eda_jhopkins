@@ -9,3 +9,6 @@ names(ozone)
 #change variable names
 names(ozone) <- make.names(names(ozone))
 names(ozone)
+
+#variables classes
+str(ozone)
