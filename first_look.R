@@ -18,6 +18,15 @@ ozone %>%
         select(State.Name) %>% 
         unique %>% 
         nrow
-#Why are there 53 States? Check the names
 
+#Why are there 53 States? Check the names
 unique(ozone$State.Name)
+
+#Summary statistics to validate the data 
+summary(ozone$Sample.Measurement)
+
+#We need more information 
+quantile(ozone$Sample.Measurement, seq(0,1,0.1))
+
+
+
