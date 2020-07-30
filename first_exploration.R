@@ -13,3 +13,33 @@ tail(ranking,10)
 ozone %>% 
         filter(State.Name == "California" & County.Name == "Mariposa") %>% 
         nrow
+
+#looking at the monthly data
+ozone <- ozone %>% 
+        mutate(Date.Local= as.Date(Date.Local))
+
+ozone %>% 
+        filter(State.Name == "California" & County.Name == "Mariposa") %>% 
+        mutate(month = factor(months(Date.Local), levels = month.name)) %>% 
+        group_by(month) %>% 
+        summarize(ozone = mean(Sample.Measurement))
+
+#let's take a look at the County with the lowest mean
+
+ozone %>% 
+        filter(State.Name =="Oklahoma" & County.Name == "Caddo") %>% 
+        nrow
+
+
+ozone %>% 
+        filter(State.Name == "Oklahoma" & County.Name == "Caddo") %>% 
+        mutate(month = factor(months(Date.Local), levels = month.name)) %>% 
+        group_by(month) %>% 
+        summarize(ozone = mean(Sample.Measurement))
+
+        
+        
+        
+
+
+
