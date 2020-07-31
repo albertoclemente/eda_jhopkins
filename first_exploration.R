@@ -37,8 +37,25 @@ ozone %>%
         group_by(month) %>% 
         summarize(ozone = mean(Sample.Measurement))
 
-        
-        
+#  how stable are the rankings from year to year”
+# applying bootstrap sample
+
+set.seed(10234)
+N <-  nrow(ozone)
+idx <- sample(N,N,replace= T)
+
+ozone2 <- ozone[idx,]  
+
+ranking2 <- ozone2 %>% 
+        group_by(State.Name,County.Name) %>% 
+        summarize(ozone = mean(Sample.Measurement)) %>% 
+        as.data.frame() %>% 
+        arrange(desc(ozone))
+
+cbind(head(ranking,10),
+      head(ranking2,10)) #rankings are stable over time
+
+ 
         
 
 
