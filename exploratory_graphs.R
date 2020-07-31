@@ -58,3 +58,4 @@ xyplot(pm25 ~ latitude | region, pollution )
 qplot(latitude ~ pm25, pollution, facets = . ~ region) 
 
 
+
