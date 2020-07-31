@@ -18,6 +18,8 @@ boxplot(pollution$pm25, col="red") #I can detect outliers
 pollution %>% 
         filter(pm25 >15)
 
+boxplot(pollution$pm25)$out
+
 #let's localise the outliers on a map
 map("county", "california")
 with(filter(pollution, pm25 > 15), points(longitude, latitude))
@@ -33,6 +35,26 @@ rug(pollution$pm25)
 boxplot(pollution$pm25, col="red")
 abline(h=12)
 
+#histogram with median & national standard 
+hist(pollution$pm25, col="yellow")
+abline(v=12,lwd =2)
+abline(v=median(pollution$pm25),lwd =4,col="magenta")
 
+#barplot for categorical variables such as region 
+table(pollution$region) %>% 
+        barplot(col="green")
+
+#relationship between two variables, boxplots
+boxplot(pm25 ~ region, pollution, col ="green")
+
+#scatterplot
+with(pollution,plot(latitude,pm25,col= region))
+abline(h = 12, lwd = 2, lty = 2)
+
+#lattice
+xyplot(pm25 ~ latitude | region, pollution )
+
+#ggplot2
+qplot(latitude ~ pm25, pollution, facets = . ~ region) 
 
 
