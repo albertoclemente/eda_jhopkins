@@ -55,7 +55,8 @@ ranking2 <- ozone2 %>%
 cbind(head(ranking,10),
       head(ranking2,10)) #rankings are stable over time
 
-
+cbind(tail(ranking,10),
+      tail(ranking2,10))
 
  
         
