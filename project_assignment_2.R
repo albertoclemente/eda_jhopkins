@@ -41,16 +41,19 @@ pm25_Baltimore <-
         group_by(year) %>% 
         summarize(total_pm25_Baltimore = sum(Emissions))
 
-##generating the plot
+##generating plot2
 with(pm25_Baltimore,
      plot(year,total_pm25_Baltimore,pch=19, col = "blue", 
           xlab="Year", ylab = "Total PM2.5 (tons)"))
+
 with(pm25_Baltimore,
      lines(year,total_pm25_Baltimore,col="green", lwd=2)) #the total amount of PM2.5 decreased from 1999 to 2008
 title (main= "Total amount of PM2.5 in Baltimore from 1999 to 2008")
 
 dev.copy(png,"plot2.png")
 dev.off()
+
+
         
         
 
