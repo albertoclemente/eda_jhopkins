@@ -27,3 +27,39 @@ title (main= "Total amount of PM2.5 from 1999 to 2008")
 dev.copy(png,"plot1.png")
 dev.off()
 
+# 2. Have total emissions from PM2.5 decreased in the Baltimore City,
+# Maryland (fips == "24510") from 1999 to 2008? 
+# Use the base plotting system to make a plot answering this question.
+
+NEI <- readRDS("summarySCC_PM25.rds")
+library(tidyverse)
+
+#Total PM2.5 in Baltimore per year
+pm25_Baltimore <- 
+        NEI %>% 
+        filter(fips==24510) %>% 
+        group_by(year) %>% 
+        summarize(total_pm25_Baltimore = sum(Emissions))
+
+##generating the plot
+with(pm25_Baltimore,
+     plot(year,total_pm25_Baltimore,pch=19, col = "blue", 
+          xlab="Year", ylab = "Total PM2.5 (tons)"))
+with(pm25_Baltimore,
+     lines(year,total_pm25_Baltimore,col="green", lwd=2)) #the total amount of PM2.5 decreased from 1999 to 2008
+title (main= "Total amount of PM2.5 in Baltimore from 1999 to 2008")
+
+dev.copy(png,"plot2.png")
+dev.off()
+        
+        
+
+
+
+
+
+
+
+
+
+
