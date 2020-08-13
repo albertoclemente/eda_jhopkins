@@ -66,6 +66,8 @@ dev.off()
 NEI <- readRDS("summarySCC_PM25.rds")
 library(tidyverse)
 
+
+##subsetting total PM2.5 for each source
 pm25_Baltimore_source <- 
         NEI %>% 
         filter(fips==24510) %>% 
@@ -73,6 +75,8 @@ pm25_Baltimore_source <-
         summarize(total_pm25_source=sum(Emissions)) %>% 
         ungroup() 
 
+
+##generating plot 3 
 plot3 <- 
         ggplot(pm25_Baltimore_source,aes(year,total_pm25_source)) +
         geom_point(size=2, col="blue") +
