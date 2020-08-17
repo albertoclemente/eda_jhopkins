@@ -1,7 +1,4 @@
 
-SCC <- readRDS("Source_Classification_Code.rds")
-
-
 # 1.Have total emissions from PM2.5 decreased in the United States 
 # from 1999 to 2008? Using the base plotting system, make a plot showing 
 # the total PM2.5 emission from all sources for each of the years 
@@ -18,10 +15,8 @@ pm25 <-
 
 #generating plot1 
 with(pm25,
-     plot(year,total_pm25,pch=19, col = "red", 
-          xlab="Year", ylab = "Total PM2.5 (tons)"))
-with(pm25,
-     lines(year,total_pm25,col="blue", lwd=2)) #the total amount of PM2.5 decreased from 1999 to 2008
+     barplot(total_pm25/10^6 ~ year, col = "green", 
+          xlab="Year", ylab = "Total PM2.5 (tons * 10^6)")) #the total amount of PM2.5 decreased from 1999 to 2008
 title (main= "Total amount of PM2.5 from 1999 to 2008")
 
 dev.copy(png,"plot1.png")
@@ -45,11 +40,8 @@ pm25_Baltimore <-
 
 ##generating plot2
 with(pm25_Baltimore,
-     plot(year,total_pm25_Baltimore,pch=19, col = "blue", 
-          xlab="Year", ylab = "Total PM2.5 (tons)"))
-
-with(pm25_Baltimore,
-     lines(year,total_pm25_Baltimore,col="green", lwd=2)) #the total amount of PM2.5 decreased from 1999 to 2008
+     barplot(total_pm25_Baltimore ~ year, col = "blue", 
+          xlab="Year", ylab = "Total PM2.5 (tons)")) #the total amount of PM2.5 decreased from 1999 to 2008
 title (main= "Total amount of PM2.5 in Baltimore from 1999 to 2008")
 
 dev.copy(png,"plot2.png")
@@ -76,21 +68,67 @@ pm25_Baltimore_source <-
         ungroup() 
 
 
-##generating plot 3 
+##generating plot #3 
 plot3 <- 
-        ggplot(pm25_Baltimore_source,aes(year,total_pm25_source)) +
-        geom_point(size=2, col="blue") +
-        geom_line(col= "red") +
-        facet_wrap(. ~ type) +
+        ggplot(pm25_Baltimore_source,aes(factor(year),total_pm25_source)) +
+        geom_bar(stat = "identity",aes(fill=type)) +
+        facet_wrap(. ~ type, scales = "free") +
         xlab("Year")+
-        ylab("Total PM2.5 (tons)") +
+        ylab("Total PM2.5 (Tons)") +
         ggtitle("Total PM2.5 in Baltimore for each source from 1999 to 2008") #non-road,nonpoint,on-road descreased while point increased
 
 with(plot3,dev.copy(png,"plot3.png", width = 480, height = 480))
 
 dev.off()
 
+#4.Across the United States, 
+#how have emissions from coal combustion-related sources 
+#changed from 1999–2008?
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+library(tidyverse)
+
+
+##looking for emissions 
+#from coal combustion-related sources
+
+combustion.coal <- 
+        grepl("Fuel Comb.*Coal", SCC$EI.Sector)
+
+combustion.coal.sources <-
+        SCC[combustion.coal,]
+
+emissions.coal.combustion <- 
+        NEI[(NEI$SCC %in% combustion.coal.sources$SCC), ]
+
+
+##calculating the total amount of emissions 1999-2008
+total.coal.emissios <- 
+        emissions.coal.combustion %>% 
+        group_by(year) %>% 
+        summarize(total.emissions = sum(Emissions))
+
+plot4 <- 
+        ggplot(total.coal.emissios,aes(factor(year),total.emissions/10^5))+
+        geom_bar(stat="identity",aes(fill=year)) +
+        xlab("Year")+
+        ylab("Total PM2.5 emissions (10^5 Tons)")+
+        ggtitle("Total PM2.5 coal-related emissions in the US from 1999 to 2008")
         
+
+with(plot4,dev.copy(png,"plot4.png", width = 480, height = 480))
+
+dev.off()
+
+        
+
+        
+
+
+
+
 
 
 
