@@ -122,7 +122,39 @@ with(plot4,dev.copy(png,"plot4.png", width = 480, height = 480))
 
 dev.off()
 
-        
+
+#5.How have emissions from motor vehicle sources 
+#changed from 1999–2008 in Baltimore City?
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+library(tidyverse)
+
+
+#filtering emissions from ON-ROAD  Baltimore city
+baltimore_veh_emissions <- 
+        NEI %>% 
+        filter(fips == "24510" & type == "ON-ROAD") %>% 
+        group_by(year) %>% 
+        summarise(tot.veh.emi.Bal = sum(Emissions))
+
+##generating the plot
+plot5 <- 
+        ggplot(baltimore_veh_emissions,aes(factor(year),tot.veh.emi.Bal))+
+        geom_bar(stat="identity", aes(fill = tot.veh.emi.Bal)) +
+        labs(fill = "PM2.5 emissions (Tons)")+
+        xlab("Year")+
+        ylab(expression("Total PM" [2.5]*"emissions (Tons)"))+
+        ggtitle("PM2.5 emissions from motor vehicles from 1999 to 2008 in Baltimore")
+
+with(plot5,dev.copy(png,"plot5.png", 
+                    width = 480, height = 480))
+
+dev.off()
+
+
+
 
         
 
