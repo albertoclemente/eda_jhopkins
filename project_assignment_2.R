@@ -132,17 +132,27 @@ SCC <- readRDS("Source_Classification_Code.rds")
 library(tidyverse)
 
 
-#filtering emissions from ON-ROAD  Baltimore city
-baltimore_veh_emissions <- 
-        NEI %>% 
-        filter(fips == "24510" & type == "ON-ROAD") %>% 
+#filtering emissions from   Baltimore city
+vehicles <- 
+        grepl("vehicle",SCC$SCC.Level.Two, ignore.case=TRUE)
+
+vehicles.SCC <- 
+        SCC[vehicles,]
+
+vehicles.NEI <- 
+        NEI[NEI$SCC %in% vehicles.SCC$SCC,]
+
+
+vehiclesBaltimore <- 
+        vehicles.NEI %>% 
+        filter(fips == "24510") %>% 
         group_by(year) %>% 
-        summarise(tot.veh.emi.Bal = sum(Emissions))
+        summarize(Total.VehEmis.Baltimore = sum(Emissions))
 
 ##generating the plot
 plot5 <- 
-        ggplot(baltimore_veh_emissions,aes(factor(year),tot.veh.emi.Bal))+
-        geom_bar(stat="identity", aes(fill = tot.veh.emi.Bal)) +
+        ggplot(vehiclesBaltimore,aes(factor(year),Total.VehEmis.Baltimore))+
+        geom_bar(stat="identity", aes(fill = Total.VehEmis.Baltimore)) +
         labs(fill = "PM2.5 emissions (Tons)")+
         xlab("Year")+
         ylab(expression("Total PM" [2.5]*"emissions (Tons)"))+
@@ -152,6 +162,8 @@ with(plot5,dev.copy(png,"plot5.png",
                     width = 480, height = 480))
 
 dev.off()
+
+
 
 
 
