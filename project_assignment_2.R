@@ -105,16 +105,16 @@ emissions.coal.combustion <-
 
 
 ##calculating the total amount of emissions 1999-2008
-total.coal.emissios <- 
+total.coal.emissions <- 
         emissions.coal.combustion %>% 
         group_by(year) %>% 
         summarize(total.emissions = sum(Emissions))
 
 plot4 <- 
-        ggplot(total.coal.emissios,aes(factor(year),total.emissions/10^5))+
-        geom_bar(stat="identity",aes(fill=year)) +
+        ggplot(total.coal.emissions,aes(factor(year),total.emissions/10^5))+
+        geom_bar(stat="identity", fill ="blue", col = "red")+
         xlab("Year")+
-        ylab("Total PM2.5 emissions (10^5 Tons)")+
+        ylab("Total PM2.5 emissions (10^5 * Tons)")+
         ggtitle("Total PM2.5 coal-related emissions in the US from 1999 to 2008")
         
 
