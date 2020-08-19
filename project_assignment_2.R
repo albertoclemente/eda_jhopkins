@@ -191,18 +191,18 @@ tot.emissions.BaLA <-
         filter(fips == "24510"| fips =="06037") %>% 
         group_by(year, fips) %>% 
         summarize(tot.emissions = sum(Emissions)) %>% 
-        rename(City = fips) %>% 
-        mutate(City=recode(City, "06037" = "Los Angeles",
+        rename(County = fips) %>% 
+        mutate(County=recode(County, "06037" = "Los Angeles",
                            "24510" = "Baltimore"))
 
 
 ##generating plot 6 
 plot6 <- 
         ggplot(tot.emissions.BaLA,aes(factor(year), tot.emissions)) +
-        geom_bar(stat = "identity", aes(fill=City)) +
-        facet_wrap(City~., scales="free") +
+        geom_bar(stat = "identity", aes(fill=County)) +
+        facet_wrap(County~., scales="free") +
         labs(x="Year",y= expression("Total PM"[2.5]*"emissions (Tons)"))+
-        ggtitle("PM2.5 emissions from motor vehicles in Baltimore and LA, 1999-2008")
+        ggtitle("PM2.5 emissions from motor vehicles in Baltimore and LA counties, \n 1999-2008")
 
 
 with(plot6,dev.copy(png,"plot6.png", 
