@@ -132,7 +132,7 @@ SCC <- readRDS("Source_Classification_Code.rds")
 library(tidyverse)
 
 
-#filtering emissions from   Baltimore city
+#filtering PM2.5 emissions in Baltimore city
 vehicles <- 
         grepl("vehicle",SCC$SCC.Level.Two, ignore.case=TRUE)
 
@@ -159,6 +159,53 @@ plot5 <-
         ggtitle("PM2.5 emissions from motor vehicles from 1999 to 2008 in Baltimore")
 
 with(plot5,dev.copy(png,"plot5.png", 
+                    width = 480, height = 480))
+
+dev.off()
+
+
+# 6.Compare emissions from motor vehicle sources in Baltimore City
+# with emissions from motor vehicle sources in Los Angeles County,
+# California (\color{red}{\verb|fips == "06037"|}fips == "06037"). 
+# Which city has seen greater changes over time
+# in motor vehicle emissions?
+
+NEI <- readRDS("summarySCC_PM25.rds")
+SCC <- readRDS("Source_Classification_Code.rds")
+
+library(tidyverse)
+
+#filtering PM2.5 emissions in Baltimore and LA county
+vehicles <- 
+        grepl("vehicle",SCC$SCC.Level.Two, ignore.case=TRUE)
+
+vehicles.SCC <- 
+        SCC[vehicles,]
+
+vehicles.NEI <- 
+        NEI[NEI$SCC %in% vehicles.SCC$SCC,]
+
+
+tot.emissions.BaLA <- 
+        vehicles.NEI %>% 
+        filter(fips == "24510"| fips =="06037") %>% 
+        group_by(year, fips) %>% 
+        summarize(tot.emissions = sum(Emissions)) %>% 
+        rename(City = fips) %>% 
+        mutate(City=recode(City, "06037" = "Los Angeles",
+                           "24510" = "Baltimore"))
+
+
+##generating plot 6 
+plot6 <- 
+        ggplot(tot.emissions.BaLA,aes(factor(year), tot.emissions)) +
+        geom_bar(stat = "identity", aes(fill=City)) +
+        facet_wrap(City~., scales="free") +
+        labs(x="Year",y= expression("Total PM"[2.5]*"emissions (Tons)"))+
+        ggtitle("PM2.5 emissions from motor vehicles in Baltimore and LA, 1999-2008")
+
+
+with(plot6,dev.copy(png,"plot6.png", 
                     width = 480, height = 480))
 
 dev.off()
